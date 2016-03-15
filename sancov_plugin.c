@@ -26,7 +26,7 @@ int plugin_is_GPL_compatible;
 tree sancov_fndecl;
 
 static struct plugin_info sancov_plugin_info = {
-	.version	= "20160305",
+	.version	= "20160315",
 	.help		= "sancov plugin\n",
 };
 
@@ -67,6 +67,14 @@ static void sancov_start_unit(void __unused *gcc_data, void __unused *user_data)
 	tree BT_FN_VOID = build_function_type_list(void_type_node, NULL_TREE);
 
 	sancov_fndecl = build_fn_decl("__sanitizer_cov_trace_pc", BT_FN_VOID);
+
+	DECL_ASSEMBLER_NAME(sancov_fndecl);
+	TREE_PUBLIC(sancov_fndecl) = 1;
+	DECL_EXTERNAL(sancov_fndecl) = 1;
+	DECL_ARTIFICIAL(sancov_fndecl) = 1;
+	DECL_PRESERVE_P(sancov_fndecl) = 1;
+	DECL_UNINLINABLE(sancov_fndecl) = 1;
+	TREE_USED(sancov_fndecl) = 1;
 
 	nothrow_attr = tree_cons(get_identifier("nothrow"), NULL, NULL);
 	decl_attributes(&sancov_fndecl, nothrow_attr, 0);
