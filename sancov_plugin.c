@@ -26,7 +26,7 @@ int plugin_is_GPL_compatible;
 tree sancov_fndecl;
 
 static struct plugin_info sancov_plugin_info = {
-	.version	= "20160315",
+	.version	= "20160402",
 	.help		= "sancov plugin\n",
 };
 
@@ -79,8 +79,10 @@ static void sancov_start_unit(void __unused *gcc_data, void __unused *user_data)
 	nothrow_attr = tree_cons(get_identifier("nothrow"), NULL, NULL);
 	decl_attributes(&sancov_fndecl, nothrow_attr, 0);
 	gcc_assert(TREE_NOTHROW(sancov_fndecl));
+#if BUILDING_GCC_VERSION > 4005
 	leaf_attr = tree_cons(get_identifier("leaf"), NULL, NULL);
 	decl_attributes(&sancov_fndecl, leaf_attr, 0);
+#endif
 }
 
 int plugin_init(struct plugin_name_args *plugin_info, struct plugin_gcc_version *version)
